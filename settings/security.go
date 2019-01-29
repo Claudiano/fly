@@ -73,10 +73,3 @@ func ValidateToken(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Token não autorizado")
 	}
 }
-
-/*
-func Cryptopgrafar(dado interface{}) []byte {
-	res, err := [](dado)
-
-}
-*/

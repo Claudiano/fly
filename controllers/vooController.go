@@ -15,6 +15,13 @@ var vooService = services.VooService{}
 
 type VooController struct{}
 
+// ShowAccount godoc
+// @Summary Show a account
+// @Description Retorna rodos os voos cadastrados
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} models.Voo
+// @Router /voo [get]
 func (VooController) BuscarVoos(w http.ResponseWriter, r *http.Request) {
 
 	var voos []models.Voo

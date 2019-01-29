@@ -6,9 +6,10 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-chi/chi"
+
 	_ "fly/docs"
 
-	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
@@ -24,33 +25,33 @@ func InitServer() {
 
 	// Verifica serviços necessarias para funcionar
 
-	r := mux.NewRouter()
+	r := chi.NewRouter()
 
 	// endpoints de voo
-	r.HandleFunc(PATH_RAIZ+"/voo", vooController.BuscarVoos).Methods("GET")
-	r.HandleFunc(PATH_RAIZ+"/voo", vooController.CadastrarVoo).Methods("POST")
-	r.HandleFunc(PATH_RAIZ+"/voo", vooController.ExcluirVoo).Methods("DELETE")
-	r.HandleFunc(PATH_RAIZ+"/voo", vooController.AtualizarVoo).Methods("UPDATE")
-	r.HandleFunc(PATH_RAIZ+"/voo/{idVoo}", vooController.BuscarVooPorId).Methods("GET")
+	r.Get(PATH_RAIZ+"/voo", vooController.BuscarVoos)
+	r.Post(PATH_RAIZ+"/voo", vooController.CadastrarVoo)
+	r.Delete(PATH_RAIZ+"/voo", vooController.ExcluirVoo)
+	r.Put(PATH_RAIZ+"/voo", vooController.AtualizarVoo)
+	r.Get(PATH_RAIZ+"/voo/{idVoo}", vooController.BuscarVooPorId)
 
 	// endpoints de passagem
-	r.HandleFunc(PATH_RAIZ+"/passagem", passagemController.BuscarPassagens).Methods("GET")
-	r.HandleFunc(PATH_RAIZ+"/passagem", passagemController.CadastrarPassagem).Methods("POST")
-	r.HandleFunc(PATH_RAIZ+"/passagem", passagemController.ExcluirPassagem).Methods("DELETE")
-	r.HandleFunc(PATH_RAIZ+"/passagem", passagemController.AtualizarPassagem).Methods("UPDATE")
-	r.HandleFunc(PATH_RAIZ+"/passagem/{idPassagem}", passagemController.BuscarPassagemPorId).Methods("GET")
+	r.Get(PATH_RAIZ+"/passagem", passagemController.BuscarPassagens)
+	r.Post(PATH_RAIZ+"/passagem", passagemController.CadastrarPassagem)
+	r.Delete(PATH_RAIZ+"/passagem", passagemController.ExcluirPassagem)
+	r.Put(PATH_RAIZ+"/passagem", passagemController.AtualizarPassagem)
+	r.Get(PATH_RAIZ+"/passagem/{idPassagem}", passagemController.BuscarPassagemPorId)
 
 	// endpoints de passageiro
-	r.HandleFunc(PATH_RAIZ+"/passageiro", passageiroController.BuscarPassageiros).Methods("GET")
-	r.HandleFunc(PATH_RAIZ+"/passageiro", passageiroController.CadastrarPassageiro).Methods("POST")
-	r.HandleFunc(PATH_RAIZ+"/passageiro", passageiroController.AtualizarPassageiro).Methods("UPDATE")
-	r.HandleFunc(PATH_RAIZ+"/passageiro/{idPassageiro}", passageiroController.BuscarPassageiroPorId).Methods("GET")
+	r.Get(PATH_RAIZ+"/passageiro", passageiroController.BuscarPassageiros)
+	r.Post(PATH_RAIZ+"/passageiro", passageiroController.CadastrarPassageiro)
+	r.Put(PATH_RAIZ+"/passageiro", passageiroController.AtualizarPassageiro)
+	r.Get(PATH_RAIZ+"/passageiro/{idPassageiro}", passageiroController.BuscarPassageiroPorId)
 
 	// realizar login
-	r.HandleFunc(PATH_RAIZ+"/login", passageiroController.RealizarLogin).Methods("POST")
+	r.Post(PATH_RAIZ+"/login", passageiroController.RealizarLogin)
 
 	// adiconado documentação
-	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 	// Use default options
 	handler := cors.Default().Handler(r)

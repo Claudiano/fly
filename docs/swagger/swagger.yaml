@@ -1,10 +1,45 @@
-basePath: '{{.BasePath}}'
-host: '{{.Host}}'
+basePath: /api/v1
+definitions:
+  models.Voo:
+    properties:
+      capacidade:
+        type: integer
+      destino:
+        type: string
+      horaSaida:
+        type: string
+      idVoo:
+        type: integer
+    type: object
+host: localhost
 info:
-  contact: {}
-  description: '{{.Description}}'
-  license: {}
-  title: '{{.Title}}'
-  version: '{{.Version}}'
-paths: {}
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server Petstore server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /voo:
+    get:
+      consumes:
+      - application/json
+      description: Retorna rodos os voos cadastrados
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Voo'
+            type: object
+      summary: Show a account
+securityDefinitions:
+  BasicAuth:
+    type: basic
 swagger: "2.0"

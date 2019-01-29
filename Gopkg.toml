@@ -40,3 +40,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/swaggo/http-swagger"
+
+[[constraint]]
+  name = "github.com/go-chi/chi"
+  version = "4.0.1"

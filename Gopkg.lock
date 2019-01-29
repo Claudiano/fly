@@ -18,15 +18,23 @@
   revision = "de5bf2ad457846296e2031421a34e2568e304e35"
 
 [[projects]]
-  branch = "master"
-  digest = "1:315c5f2f60c76d89b871c73f9bd5fe689cad96597afd50fb9992228ef80bdd34"
-  name = "github.com/alecthomas/template"
+  digest = "1:bb2130e54ac8ea3ff78312ca365ce3b8a23423ed362530551bdceaccfa4d8e77"
+  name = "github.com/dgrijalva/jwt-go"
   packages = [
     ".",
-    "parse",
+    "request",
   ]
   pruneopts = "UT"
-  revision = "a0175ee3bccc567396460bf5acd36800cb10c49c"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
+  digest = "1:b8d8afedc1ea9028d6b8a037a61acaf5bac8ffb1ceb4b285a0af6654bfc62f16"
+  name = "github.com/go-chi/chi"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "1a6bb108ccf279c8dac6f9bad857d773b4f9b421"
+  version = "v4.0.1"
 
 [[projects]]
   digest = "1:953a2628e4c5c72856b53f5470ed5e071c55eccf943d798d42908102af2a610f"
@@ -221,7 +229,9 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/alecthomas/template",
+    "github.com/dgrijalva/jwt-go",
+    "github.com/dgrijalva/jwt-go/request",
+    "github.com/go-chi/chi",
     "github.com/gorilla/mux",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/postgres",
