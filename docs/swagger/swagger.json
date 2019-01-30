@@ -20,7 +20,7 @@
     "paths": {
         "/voo": {
             "get": {
-                "description": "Retorna rodos os voos cadastrados",
+                "description": "Retorna todos os voos cadastrados",
                 "consumes": [
                     "application/json"
                 ],
@@ -34,6 +34,78 @@
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/models.Voo"
+                        }
+                    },
+                    "404": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "responses": {
+                    "200": {},
+                    "404": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Metodo que cadastrar voos",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Show a account",
+                "responses": {
+                    "200": {},
+                    "404": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/voo/{idVoo}": {
+            "get": {
+                "description": "Retorna o voo cadastrado com base no idVoo passado",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Show a account",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "IdVoo",
+                        "name": "idVoo",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Voo"
+                        }
+                    },
+                    "404": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }

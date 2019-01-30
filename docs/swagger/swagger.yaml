@@ -29,7 +29,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retorna rodos os voos cadastrados
+      description: Retorna todos os voos cadastrados
       produces:
       - application/json
       responses:
@@ -38,6 +38,54 @@ paths:
           schema:
             $ref: '#/definitions/models.Voo'
             type: object
+        "404":
+          description: ok
+          schema:
+            type: string
+      summary: Show a account
+    post:
+      consumes:
+      - application/json
+      description: Metodo que cadastrar voos
+      produces:
+      - application/json
+      responses:
+        "200": {}
+        "404":
+          description: ok
+          schema:
+            type: string
+      summary: Show a account
+    put:
+      responses:
+        "200": {}
+        "404":
+          description: ok
+          schema:
+            type: string
+  /voo/{idVoo}:
+    get:
+      consumes:
+      - application/json
+      description: Retorna o voo cadastrado com base no idVoo passado
+      parameters:
+      - description: IdVoo
+        in: path
+        name: idVoo
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Voo'
+            type: object
+        "404":
+          description: ok
+          schema:
+            type: string
       summary: Show a account
 securityDefinitions:
   BasicAuth:

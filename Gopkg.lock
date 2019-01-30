@@ -18,6 +18,17 @@
   revision = "de5bf2ad457846296e2031421a34e2568e304e35"
 
 [[projects]]
+  branch = "master"
+  digest = "1:315c5f2f60c76d89b871c73f9bd5fe689cad96597afd50fb9992228ef80bdd34"
+  name = "github.com/alecthomas/template"
+  packages = [
+    ".",
+    "parse",
+  ]
+  pruneopts = "UT"
+  revision = "a0175ee3bccc567396460bf5acd36800cb10c49c"
+
+[[projects]]
   digest = "1:bb2130e54ac8ea3ff78312ca365ce3b8a23423ed362530551bdceaccfa4d8e77"
   name = "github.com/dgrijalva/jwt-go"
   packages = [
@@ -229,6 +240,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/alecthomas/template",
     "github.com/dgrijalva/jwt-go",
     "github.com/dgrijalva/jwt-go/request",
     "github.com/go-chi/chi",
