@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fly/dtos"
 	"fly/models"
 	"fly/repositories"
 )
@@ -10,8 +11,8 @@ var passagemRepository = repositories.PassagemRepository{}
 type PassagemService struct {
 }
 
-func (PassagemService) CadastrarPassagem(passagem models.Passagem) {
-	passagemRepository.Save(passagem)
+func (PassagemService) CadastrarPassagem(passagemDto dtos.PassagemDto) {
+	passagemRepository.Save(passagemDto)
 }
 
 func (PassagemService) CarregarPassagens() []models.Passagem {

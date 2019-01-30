@@ -13,13 +13,14 @@ var passageiroRepository = repositories.PassageiroRepository{}
 type PassageiroService struct {
 }
 
-func (PassageiroService) CadastrarPassageiro(passageiro models.Passageiro) {
+func (PassageiroService) CadastrarPassageiro(passageiro dtos.PassageiroDto) {
 	passageiroRepository.Save(passageiro)
 }
 
 func (PassageiroService) BuscarPassageiros() []models.Passageiro {
 	fmt.Println("buscar passageiros")
 	passageiros := passageiroRepository.FindByAll()
+
 	return passageiros
 }
 
@@ -35,7 +36,7 @@ func (PassageiroService) ExcluirPassageiro(passageiro models.Passageiro) {
 	passageiroRepository.Delete(passageiro)
 }
 
-func (PassageiroService) BuscarPassageiroLogin(passageiroDto dtos.PassageiroDto) models.Passageiro {
-	passageiro := passageiroRepository.FIndByPassageiro(passageiroDto)
+func (PassageiroService) BuscarPassageiroLogin(credenciais dtos.CredenciaisDto) models.Passageiro {
+	passageiro := passageiroRepository.FIndByPassageiro(credenciais)
 	return passageiro
 }

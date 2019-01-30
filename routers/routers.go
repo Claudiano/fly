@@ -57,7 +57,7 @@ func InitServer() {
 	handler := cors.Default().Handler(r)
 
 	// sob o servido
-	fmt.Println("serviço rodando na porta 8081")
-	log.Fatal(http.ListenAndServe("localhost:8081", handler))
+	fmt.Println("serviço rodando na porta 8080")
+	log.Fatal(http.ListenAndServe("localhost:8080", handler))
 
 }

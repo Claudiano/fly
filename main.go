@@ -2,7 +2,9 @@ package main
 
 import (
 	"fly/routers"
+	"fly/utils"
 	"fmt"
+	"time"
 )
 
 // @title Swagger Example API
@@ -22,6 +24,10 @@ import (
 
 // @securityDefinitions.basic BasicAuth
 func main() {
+
+	utils.ValidarServicos()
+
+	fmt.Println(time.Now())
 
 	fmt.Println("Iniciando servidor")
 	routers.InitServer()

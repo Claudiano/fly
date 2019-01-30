@@ -21,7 +21,10 @@ func CriarTabelas() {
 
 	// verifica se tabela já existem, caso não elas são criadas
 	if !db.HasTable(&models.Passageiro{}) {
+		//db.CreateTable(&models.Passageiro{})
+
 		db.CreateTable(&models.Passageiro{})
+		//db.Exec("CREATE TABLE passageiros(idPassageiro SERIAL PRIMARY KEY, nome VARCHAR(50), cpf VARCHAR(11), email VARCHAR(255) UNIQUE NOT NULL, senha TEXT NOT NULL);")
 	}
 
 	if !db.HasTable(&models.Voo{}) {

@@ -12,7 +12,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
 )
 
 var passageiroService = services.PassageiroService{}
@@ -28,10 +28,12 @@ func (PassageiroController) BuscarPassageiros(w http.ResponseWriter, r *http.Req
 }
 
 func (PassageiroController) BuscarPassageiroPorId(w http.ResponseWriter, r *http.Request) {
-	var params = mux.Vars(r)
+
+	// pega parametros passados
+	id := chi.URLParam(r, "idPassageiro")
 
 	// convertendo o idpassagem para string
-	idPassageiro, err := strconv.ParseUint(params["idPassageiro"], 10, 64)
+	idPassageiro, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
 		panic("erros ao ao converter idPassageiro para uint64")
 	}
@@ -44,7 +46,7 @@ func (PassageiroController) BuscarPassageiroPorId(w http.ResponseWriter, r *http
 
 }
 func (PassageiroController) CadastrarPassageiro(w http.ResponseWriter, r *http.Request) {
-	var passageiro models.Passageiro
+	var passageiro dtos.PassageiroDto
 
 	// pega o passageiro passado na requisicao
 	_ = json.NewDecoder(r.Body).Decode(&passageiro)
@@ -70,23 +72,20 @@ func (PassageiroController) AtualizarPassageiro(w http.ResponseWriter, r *http.R
 }
 
 func (PassageiroController) RealizarLogin(w http.ResponseWriter, r *http.Request) {
-	var passageiroDto dtos.PassageiroDto
-	var passageiro = models.Passageiro{Cpf: "123456789", Email: "teste", IdPassageiro: 1, Senha: "123456"}
+	var credenciaisDto dtos.CredenciaisDto
 	// pega o passageiro passado na requisicao
-	_ = json.NewDecoder(r.Body).Decode(&passageiroDto)
+	_ = json.NewDecoder(r.Body).Decode(&credenciaisDto)
 
 	// serviço que cadastra o passageiro
-	//	passageiro := passageiroService.BuscarPassageiroLogin(passageiroDto)
+	passageiro := passageiroService.BuscarPassageiroLogin(credenciaisDto)
 
 	// adiciona como reposta o voo retornado
 	//	json.NewEncoder(w).Encode(passageiro)
 	//	utils.RespondwithJSON(w, http.StatusCreated, map[string]string{"message": "Passageiro cadastrado"})
 
-	// Demo - in real case scenario you'd check this against your database
-	fmt.Println(passageiroDto.Email + " : " + passageiroDto.Senha)
+	fmt.Println(credenciaisDto)
 
-	if passageiroDto.Email == "claudiano" && passageiroDto.Senha == "claudiano" {
-		fmt.Println("usuario logado")
+	if credenciaisDto.Email == passageiro.Email && credenciaisDto.Senha == passageiro.Senha {
 
 		token, err := settings.GenerateJWT(passageiro)
 		if err != nil {

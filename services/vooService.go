@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fly/dtos"
 	"fly/models"
 	"fly/repositories"
 )
@@ -9,7 +10,7 @@ var vooRepository = repositories.VooRepository{}
 
 type VooService struct{}
 
-func (VooService) CadastrarVoo(voo models.Voo) {
+func (VooService) CadastrarVoo(voo dtos.VooDto) {
 	vooRepository.Save(voo)
 }
 
@@ -24,6 +25,7 @@ func (VooService) CarregarVoo(idVoo uint64) models.Voo {
 }
 
 func (VooService) AtualizarVoo(voo models.Voo) {
+
 	vooRepository.Update(voo)
 }
 

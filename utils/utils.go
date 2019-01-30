@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"fly/repositories"
 	"fmt"
 	"net/http"
 )
@@ -15,5 +16,5 @@ func RespondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 func ValidarServicos() {
-	//repositories.CriarTabelas()
+	repositories.CriarTabelas()
 }

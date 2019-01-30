@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fly/dtos"
 	"fly/models"
 	"fly/services"
 	"fly/utils"
@@ -40,13 +41,13 @@ func (PassagemController) BuscarPassagemPorId(w http.ResponseWriter, r *http.Req
 
 }
 func (PassagemController) CadastrarPassagem(w http.ResponseWriter, r *http.Request) {
-	var passagem models.Passagem
+	var passagemDto dtos.PassagemDto
 
 	// pega o passagem passado na requisicao
-	_ = json.NewDecoder(r.Body).Decode(&passagem)
+	_ = json.NewDecoder(r.Body).Decode(&passagemDto)
 
 	// serviço que cadastra o passagem
-	passagemService.CadastrarPassagem(passagem)
+	passagemService.CadastrarPassagem(passagemDto)
 
 	utils.RespondwithJSON(w, http.StatusCreated, map[string]string{"message": "Passagem cadastrado"})
 }

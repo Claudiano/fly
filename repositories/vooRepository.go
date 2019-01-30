@@ -1,15 +1,21 @@
 package repositories
 
 import (
+	"fly/dtos"
 	"fly/models"
 )
 
 type VooRepository struct{}
 
-func (VooRepository) Save(voo models.Voo) {
+func (VooRepository) Save(vooDto dtos.VooDto) {
 	db := connectar()
 
-	db.Create(voo)
+	var voo models.Voo
+	voo.Destino = vooDto.Destino
+	voo.HoraSaida = vooDto.HoraSaida
+	voo.Capacidade = vooDto.Capacidade
+
+	db.Create(&voo)
 
 	defer db.Close()
 }
@@ -35,12 +41,13 @@ func (VooRepository) FindByAll() []models.Voo {
 
 func (VooRepository) Update(voo models.Voo) {
 	db := connectar()
-	db.Save(voo)
+	db.Save(&voo)
+
 	defer db.Close()
 }
 
 func (VooRepository) Delete(voo models.Voo) {
 	db := connectar()
-	db.Delete(voo)
+	db.Delete(&voo)
 	defer db.Close()
 }

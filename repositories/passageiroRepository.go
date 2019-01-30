@@ -9,9 +9,19 @@ import (
 type PassageiroRepository struct {
 }
 
-func (PassageiroRepository) Save(passageiro models.Passageiro) {
+func (PassageiroRepository) Save(passageiroDto dtos.PassageiroDto) {
+	var passageiro = models.Passageiro{}
+
+	// criando passageiro
+	//passageiro.IdPassageiro = 0
+	passageiro.Nome = passageiroDto.Nome
+	passageiro.Email = passageiroDto.Email
+	passageiro.Cpf = passageiroDto.Cpf
+	passageiro.Senha = passageiroDto.Senha
+
 	db := connectar()
-	db.Create(passageiro)
+
+	db.Create(&passageiro)
 	defer db.Close()
 }
 
@@ -19,8 +29,9 @@ func (PassageiroRepository) FindById(idPassageiro uint64) models.Passageiro {
 	var passageiro models.Passageiro
 
 	db := connectar()
-	db.Where("idPassageiro = ?", idPassageiro).Find(&passageiro)
+	db.Where("IdPassageiro = ?", idPassageiro).Find(&passageiro)
 	defer db.Close()
+	fmt.Println(passageiro)
 
 	return passageiro
 
@@ -39,7 +50,7 @@ func (PassageiroRepository) FindByAll() []models.Passageiro {
 
 func (PassageiroRepository) Update(passageiro models.Passageiro) {
 	db := connectar()
-	db.Save(passageiro)
+	db.Save(&passageiro)
 	defer db.Close()
 
 }
@@ -47,17 +58,17 @@ func (PassageiroRepository) Update(passageiro models.Passageiro) {
 func (PassageiroRepository) Delete(passageiro models.Passageiro) {
 	db := connectar()
 
-	db.Delete(passageiro)
+	db.Delete(&passageiro)
 
 	defer db.Close()
 
 }
 
-func (PassageiroRepository) FIndByPassageiro(passageiroDto dtos.PassageiroDto) models.Passageiro {
+func (PassageiroRepository) FIndByPassageiro(credenciais dtos.CredenciaisDto) models.Passageiro {
 	var passageiro models.Passageiro
 	db := connectar()
 
-	db.Where("email =  ? and senha = ?", passageiroDto.Email, passageiroDto.Senha).First(&passageiro)
+	db.Where("email =  ? and senha = ?", credenciais.Email, credenciais.Senha).First(&passageiro)
 
 	defer db.Close()
 

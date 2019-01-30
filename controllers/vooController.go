@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"encoding/json"
+	"fly/dtos"
 	"fly/models"
 	"fly/services"
 	"fly/utils"
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
 )
 
 var vooService = services.VooService{}
@@ -31,12 +32,13 @@ func (VooController) BuscarVoos(w http.ResponseWriter, r *http.Request) {
 }
 
 func (VooController) BuscarVooPorId(w http.ResponseWriter, r *http.Request) {
-	var params = mux.Vars(r)
+	// pega parametros passados
+	id := chi.URLParam(r, "idVoo")
 
-	// convertendo o idVoo para string
-	idVoo, err := strconv.ParseUint(params["idVoo"], 10, 32)
+	// convertendo o idpassagem para string
+	idVoo, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
-		panic("erros ao ao converter id")
+		panic("erros ao ao converter idVoo para uint64")
 	}
 
 	// serviço que retorna o voo com base no idVoo passado
@@ -47,13 +49,13 @@ func (VooController) BuscarVooPorId(w http.ResponseWriter, r *http.Request) {
 
 }
 func (VooController) CadastrarVoo(w http.ResponseWriter, r *http.Request) {
-	var voo models.Voo
+	var vooDto dtos.VooDto
 
 	// pega o voo passado na requisicao
-	_ = json.NewDecoder(r.Body).Decode(&voo)
+	_ = json.NewDecoder(r.Body).Decode(&vooDto)
 
 	// serviço que cadastra o voo
-	vooService.CadastrarVoo(voo)
+	vooService.CadastrarVoo(vooDto)
 
 	utils.RespondwithJSON(w, http.StatusCreated, map[string]string{"message": "Voo cadastrado"})
 }
