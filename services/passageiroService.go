@@ -13,23 +13,35 @@ var passageiroRepository = repositories.PassageiroRepository{}
 type PassageiroService struct {
 }
 
-func (PassageiroService) CadastrarPassageiro(passageiro dtos.PassageiroDto) {
-	passageiroRepository.Save(passageiro)
+func (PassageiroService) CadastrarPassageiro(passageiroDto dtos.PassageiroDto) (models.Passageiro, error) {
+	passageiro, err := passageiroRepository.Save(passageiroDto)
+	if err != nil {
+		return passageiro, err
+	}
+
+	return passageiro, nil
 }
 
-func (PassageiroService) BuscarPassageiros() []models.Passageiro {
+func (PassageiroService) BuscarPassageiros() ([]models.Passageiro, error) {
 	fmt.Println("buscar passageiros")
-	passageiros := passageiroRepository.FindByAll()
-
-	return passageiros
+	passageiros, err := passageiroRepository.FindByAll()
+	if err != nil {
+		return passageiros, err
+	}
+	return passageiros, nil
 }
 
-func (PassageiroService) BuscarPassageiro(idPassageiro uint64) models.Passageiro {
-	return passageiroRepository.FindById(idPassageiro)
+func (PassageiroService) BuscarPassageiro(idPassageiro uint64) (models.Passageiro, error) {
+	passageiro, err := passageiroRepository.FindById(idPassageiro)
+	if err != nil {
+		return passageiro, err
+	}
+	return passageiro, nil
 }
 
-func (PassageiroService) AtualizarPassageiro(passageiro models.Passageiro) {
-	passageiroRepository.Update(passageiro)
+func (PassageiroService) AtualizarPassageiro(passageiro models.Passageiro) error {
+	err := passageiroRepository.Update(passageiro)
+	return err
 }
 
 func (PassageiroService) ExcluirPassageiro(passageiro models.Passageiro) {

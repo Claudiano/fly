@@ -18,6 +18,121 @@
     "host": "localhost",
     "basePath": "/api/v1",
     "paths": {
+        "/login": {
+            "post": {
+                "responses": {
+                    "200": {},
+                    "404": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/passageiro": {
+            "get": {
+                "description": "Retorna todos os passageiros cadastrados",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Show a passageiro",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Passageiro"
+                        }
+                    },
+                    "404": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "responses": {
+                    "200": {},
+                    "404": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Metodo que cadastrar passageiro",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Show a passageiro",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "IdPassageiro",
+                        "name": "idPassageiro",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "404": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/passageiro/{idPassageiro}": {
+            "get": {
+                "description": "Retorna o passageiros cadastrado com base no idPassageiro passado",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Show a passageiro",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "IdPassageiro",
+                        "name": "idVoo",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Passageiro"
+                        }
+                    },
+                    "404": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/voo": {
             "get": {
                 "description": "Retorna todos os voos cadastrados",
@@ -27,7 +142,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Show a account",
+                "summary": "Show a voo",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -63,7 +178,16 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Show a account",
+                "summary": "Show a voo",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "IdVoo",
+                        "name": "idVoo",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {},
                     "404": {
@@ -84,7 +208,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Show a account",
+                "summary": "Show a voo",
                 "parameters": [
                     {
                         "type": "integer",
@@ -113,6 +237,26 @@
         }
     },
     "definitions": {
+        "models.Passageiro": {
+            "type": "object",
+            "properties": {
+                "cpf": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "idPassageiro": {
+                    "type": "integer"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "senha": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Voo": {
             "type": "object",
             "properties": {

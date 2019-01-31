@@ -10,25 +10,32 @@ var vooRepository = repositories.VooRepository{}
 
 type VooService struct{}
 
-func (VooService) CadastrarVoo(voo dtos.VooDto) {
-	vooRepository.Save(voo)
+func (VooService) CadastrarVoo(vooDto dtos.VooDto) (models.Voo, error) {
+	voo, err := vooRepository.Save(vooDto)
+	if err != nil {
+		return voo, err
+	}
+	return voo, nil
 }
 
-func (VooService) CarregarVoos() []models.Voo {
-	voos := vooRepository.FindByAll()
-	return voos
+func (VooService) CarregarVoos() ([]models.Voo, error) {
+	voos, err := vooRepository.FindByAll()
+	return voos, err
 }
 
-func (VooService) CarregarVoo(idVoo uint64) models.Voo {
-	passagem := vooRepository.FindById(idVoo)
-	return passagem
+func (VooService) CarregarVoo(idVoo uint64) (models.Voo, error) {
+	voo, err := vooRepository.FindById(idVoo)
+
+	return voo, err
 }
 
-func (VooService) AtualizarVoo(voo models.Voo) {
+func (VooService) AtualizarVoo(voo models.Voo) error {
 
-	vooRepository.Update(voo)
+	err := vooRepository.Update(voo)
+	return err
 }
 
-func (VooService) ExcluirVoo(voo models.Voo) {
-	vooRepository.Delete(voo)
+func (VooService) ExcluirVoo(voo models.Voo) error {
+	err := vooRepository.Delete(voo)
+	return err
 }

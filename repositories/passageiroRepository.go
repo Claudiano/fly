@@ -9,7 +9,7 @@ import (
 type PassageiroRepository struct {
 }
 
-func (PassageiroRepository) Save(passageiroDto dtos.PassageiroDto) {
+func (PassageiroRepository) Save(passageiroDto dtos.PassageiroDto) (models.Passageiro, error) {
 	var passageiro = models.Passageiro{}
 
 	// criando passageiro
@@ -21,37 +21,53 @@ func (PassageiroRepository) Save(passageiroDto dtos.PassageiroDto) {
 
 	db := connectar()
 
-	db.Create(&passageiro)
+	err := db.Create(&passageiro).First(&passageiro).Error
 	defer db.Close()
+
+	fmt.Println(passageiro)
+	if err != nil {
+		fmt.Println(err)
+		return passageiro, err
+	}
+	return passageiro, nil
 }
 
-func (PassageiroRepository) FindById(idPassageiro uint64) models.Passageiro {
+func (PassageiroRepository) FindById(idPassageiro uint64) (models.Passageiro, error) {
 	var passageiro models.Passageiro
 
 	db := connectar()
-	db.Where("IdPassageiro = ?", idPassageiro).Find(&passageiro)
-	defer db.Close()
-	fmt.Println(passageiro)
+	err := db.Where("IdPassageiro = ?", idPassageiro).Find(&passageiro).Error
 
-	return passageiro
+	defer db.Close()
+
+	if err != nil {
+		return passageiro, err
+	}
+
+	return passageiro, nil
 
 }
 
-func (PassageiroRepository) FindByAll() []models.Passageiro {
+func (PassageiroRepository) FindByAll() ([]models.Passageiro, error) {
 	fmt.Println("Consultando os passageiros na base")
 	var passageiros []models.Passageiro
 	db := connectar()
-	db.Find(&passageiros)
-
+	err := db.Find(&passageiros).Error
 	defer db.Close()
 
-	return passageiros
+	if err != nil {
+		return passageiros, err
+	}
+
+	return passageiros, nil
 }
 
-func (PassageiroRepository) Update(passageiro models.Passageiro) {
+func (PassageiroRepository) Update(passageiro models.Passageiro) error {
 	db := connectar()
-	db.Save(&passageiro)
+	err := db.Save(&passageiro).Error
 	defer db.Close()
+
+	return err
 
 }
 

@@ -16,8 +16,8 @@ var vooService = services.VooService{}
 
 type VooController struct{}
 
-// ShowAccount godoc
-// @Summary Show a account
+// ShowVoo godoc
+// @Summary Show a voo
 // @Description Retorna todos os voos cadastrados
 // @Accept  json
 // @Produce  json
@@ -27,13 +27,17 @@ type VooController struct{}
 func (VooController) BuscarVoos(w http.ResponseWriter, r *http.Request) {
 
 	var voos []models.Voo
-	voos = vooService.CarregarVoos()
-	json.NewEncoder(w).Encode(voos)
+	voos, err := vooService.CarregarVoos()
+	if err != nil {
+		utils.RespondwithJSON(w, http.StatusAccepted, nil)
+	} else {
+		utils.RespondwithJSON(w, http.StatusAccepted, voos)
+	}
 
 }
 
-// ShowAccount godoc
-// @Summary Show a account
+// ShowVoo godoc
+// @Summary Show a voo
 // @Description Retorna o voo cadastrado com base no idVoo passado
 // @Accept  json
 // @Produce  json
@@ -42,8 +46,7 @@ func (VooController) BuscarVoos(w http.ResponseWriter, r *http.Request) {
 // @Failure 404 {string} string "ok"
 // @Router /voo/{idVoo} [get]
 func (VooController) BuscarVooPorId(w http.ResponseWriter, r *http.Request) {
-	var voo models.Voo
-	
+	//
 	// pega parametros passados
 	id := chi.URLParam(r, "idVoo")
 
@@ -54,67 +57,98 @@ func (VooController) BuscarVooPorId(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// serviço que retorna o voo com base no idVoo passado
-	voo = vooService.CarregarVoo(idVoo)
+	voo, err := vooService.CarregarVoo(idVoo)
 
-	// adiciona como reposta o voo retornado
-	json.NewEncoder(w).Encode(voo)
+	// retorno
+	if err != nil {
+		utils.RespondwithJSON(w, http.StatusBadRequest, nil)
+	} else {
+		utils.RespondwithJSON(w, http.StatusCreated, voo)
+	}
 
 }
 
-// ShowAccount godoc
-// @Summary Show a account
+// ShowVoo godoc
+// @Summary Show a voo
 // @Description Metodo que cadastrar voos
 // @Accept  json
 // @Produce  json
 // @Param idVoo path int true "IdVoo"
-// @Success 200 
+// @Success 200
 // @Failure 404 {string} string "ok"
 // @Router /voo [post]
 func (VooController) CadastrarVoo(w http.ResponseWriter, r *http.Request) {
 	var vooDto dtos.VooDto
 
 	// pega o voo passado na requisicao
-	_ = json.NewDecoder(r.Body).Decode(&vooDto)
+	bodyJ := json.NewDecoder(r.Body)
+	errDec := bodyJ.Decode(&vooDto)
+	if errDec != nil {
+		utils.RespondwithJSON(w, http.StatusBadRequest, nil)
 
-	// serviço que cadastra o voo
-	vooService.CadastrarVoo(vooDto)
+	} else {
+		// serviço que cadastra o voo
+		voo, err := vooService.CadastrarVoo(vooDto)
+		if err != nil {
+			utils.RespondwithJSON(w, http.StatusAccepted, nil)
+		} else {
+			utils.RespondwithJSON(w, http.StatusCreated, voo)
 
-	utils.RespondwithJSON(w, http.StatusCreated, map[string]string{"message": "Voo cadastrado"})
+		}
+	}
 }
+
 func (VooController) ExcluirVoo(w http.ResponseWriter, r *http.Request) {
 
 	// voo que será adicionado
 	var voo models.Voo
 
 	// pega o voo passado na requisicao
-	_ = json.NewDecoder(r.Body).Decode(&voo)
+	decoder := json.NewDecoder(r.Body)
+	errDec := decoder.Decode(&voo)
+	if errDec != nil {
+		utils.RespondwithJSON(w, http.StatusBadRequest, map[string]string{"message": "Não foi possivel mapear a entidade passada no corpo da requisição"})
+	} else {
 
-	// serviço que exclui o voo passado
-	vooService.ExcluirVoo(voo)
-
-	utils.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Voo excluido"})
+		// serviço que exclui o voo passado
+		err := vooService.ExcluirVoo(voo)
+		if err != nil {
+			utils.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Voo não excluido"})
+		} else {
+			utils.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Voo excluido"})
+		}
+	}
 }
 
-// ShowAccount godoc
-// @Summary Show a account
+// ShowVoo godoc
+// @Summary Show a voo
 // @Description Metodo para atualizar um voo
 // @Accept  json
 // @Produce  json
 
-// @Success 200 
+// @Success 200
 // @Failure 404 {string} string "ok"
 // @Router /voo [put]
 func (VooController) AtualizarVoo(w http.ResponseWriter, r *http.Request) {
-	
+
 	// voo que será adicionado
 	var voo models.Voo
 
 	// pega o voo passado na requisicao
-	_ = json.NewDecoder(r.Body).Decode(&voo)
+	decoder := json.NewDecoder(r.Body)
+	errDec := decoder.Decode(&voo)
+	if errDec != nil {
+		utils.RespondwithJSON(w, http.StatusBadRequest, map[string]string{"message": "Não foi possivel mapear a entidade passada no corpo da requisição"})
+	} else {
 
-	// serviço que exclui o voo passado
-	vooService.AtualizarVoo(voo)
+		// serviço que exclui o voo passado
+		err := vooService.AtualizarVoo(voo)
+		if err != nil {
+			utils.RespondwithJSON(w, http.StatusAccepted, map[string]string{"message": "Voo não atualizado"})
+		} else {
+			utils.RespondwithJSON(w, http.StatusAccepted, map[string]string{"message": "Voo atualizado"})
 
-	utils.RespondwithJSON(w, http.StatusAccepted, map[string]string{"message": "Voo atualizado"})
+		}
 
+	}
 }

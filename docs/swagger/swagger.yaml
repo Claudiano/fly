@@ -1,5 +1,18 @@
 basePath: /api/v1
 definitions:
+  models.Passageiro:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      idPassageiro:
+        type: integer
+      nome:
+        type: string
+      senha:
+        type: string
+    type: object
   models.Voo:
     properties:
       capacidade:
@@ -25,6 +38,82 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
+  /login:
+    post:
+      responses:
+        "200": {}
+        "404":
+          description: ok
+          schema:
+            type: string
+  /passageiro:
+    get:
+      consumes:
+      - application/json
+      description: Retorna todos os passageiros cadastrados
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Passageiro'
+            type: object
+        "404":
+          description: ok
+          schema:
+            type: string
+      summary: Show a passageiro
+    post:
+      consumes:
+      - application/json
+      description: Metodo que cadastrar passageiro
+      parameters:
+      - description: IdPassageiro
+        in: path
+        name: idPassageiro
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200": {}
+        "404":
+          description: ok
+          schema:
+            type: string
+      summary: Show a passageiro
+    put:
+      responses:
+        "200": {}
+        "404":
+          description: ok
+          schema:
+            type: string
+  /passageiro/{idPassageiro}:
+    get:
+      consumes:
+      - application/json
+      description: Retorna o passageiros cadastrado com base no idPassageiro passado
+      parameters:
+      - description: IdPassageiro
+        in: path
+        name: idVoo
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Passageiro'
+            type: object
+        "404":
+          description: ok
+          schema:
+            type: string
+      summary: Show a passageiro
   /voo:
     get:
       consumes:
@@ -42,11 +131,17 @@ paths:
           description: ok
           schema:
             type: string
-      summary: Show a account
+      summary: Show a voo
     post:
       consumes:
       - application/json
       description: Metodo que cadastrar voos
+      parameters:
+      - description: IdVoo
+        in: path
+        name: idVoo
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -55,7 +150,7 @@ paths:
           description: ok
           schema:
             type: string
-      summary: Show a account
+      summary: Show a voo
     put:
       responses:
         "200": {}
@@ -86,7 +181,7 @@ paths:
           description: ok
           schema:
             type: string
-      summary: Show a account
+      summary: Show a voo
 securityDefinitions:
   BasicAuth:
     type: basic

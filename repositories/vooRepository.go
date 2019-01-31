@@ -7,7 +7,7 @@ import (
 
 type VooRepository struct{}
 
-func (VooRepository) Save(vooDto dtos.VooDto) {
+func (VooRepository) Save(vooDto dtos.VooDto) (models.Voo, error) {
 	db := connectar()
 
 	var voo models.Voo
@@ -15,39 +15,59 @@ func (VooRepository) Save(vooDto dtos.VooDto) {
 	voo.HoraSaida = vooDto.HoraSaida
 	voo.Capacidade = vooDto.Capacidade
 
-	db.Create(&voo)
+	err := db.Create(&voo).First(&voo).Error
 
 	defer db.Close()
+
+	if err != nil {
+		return voo, err
+	}
+	return voo, nil
 }
 
-func (VooRepository) FindById(idVoo uint64) models.Voo {
+func (VooRepository) FindById(idVoo uint64) (models.Voo, error) {
 	var voo models.Voo
 	db := connectar()
-	db.Where("idVoo = ?", idVoo).First(&voo)
+	err := db.Where("idVoo = ?", idVoo).First(&voo).Error
 	defer db.Close()
 
-	return voo
+	if err != nil {
+		return voo, err
+	}
+	return voo, nil
 }
 
-func (VooRepository) FindByAll() []models.Voo {
+func (VooRepository) FindByAll() ([]models.Voo, error) {
 	var voos []models.Voo
 
 	db := connectar()
-	db.Find(&voos)
+	err := db.Find(&voos).Error
 	defer db.Close()
 
-	return voos
+	if err != nil {
+		return voos, err
+	}
+	return voos, nil
 }
 
-func (VooRepository) Update(voo models.Voo) {
+func (VooRepository) Update(voo models.Voo) error {
 	db := connectar()
-	db.Save(&voo)
+	err := db.Save(&voo).Error
 
 	defer db.Close()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (VooRepository) Delete(voo models.Voo) {
+func (VooRepository) Delete(voo models.Voo) error {
 	db := connectar()
-	db.Delete(&voo)
+	err := db.Delete(&voo).Error
 	defer db.Close()
+
+	if err != nil {
+		return err
+	}
+	return err
 }
