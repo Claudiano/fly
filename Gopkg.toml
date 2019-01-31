@@ -43,7 +43,7 @@
   version = "4.0.1"
 
  [metadata.heroku]
-  root-package = "github.com/claudiano/fly"
+  root-package = "github.com/claudiano/fly-go"
   go-version = "go1.11.4"
   install = ["."]
   ensure = "false"
