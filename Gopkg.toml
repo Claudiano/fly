@@ -46,5 +46,4 @@
   root-package = "github.com/claudiano/fly-go"
   go-version = "go1.11"
   install = ["./..."]
-  ensure = "true"
-  additional-tools = ["github.com/golang-migrate/migrate"]
+
