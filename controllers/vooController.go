@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
-	"fly/dtos"
-	"fly/models"
-	"fly/services"
-	"fly/utils"
+	"fly-go/dtos"
+	"fly-go/models"
+	"fly-go/services"
+	"fly-go/utils"
 	"net/http"
 	"strconv"
 

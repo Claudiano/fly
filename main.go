@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fly/routers"
-	"fly/utils"
+	"fly-go/routers"
+	"fly-go/utils"
 	"fmt"
 	"time"
 )

@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"fly/dtos"
-	"fly/models"
+	"fly-go/dtos"
+	"fly-go/models"
 	"fmt"
 )
 

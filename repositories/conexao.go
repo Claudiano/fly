@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"fly/models"
+	"fly-go/models"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"

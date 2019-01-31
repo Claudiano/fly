@@ -2,7 +2,7 @@ package utils
 
 import (
 	"encoding/json"
-	"fly/repositories"
+	"fly-go/repositories"
 	"fmt"
 	"net/http"
 )

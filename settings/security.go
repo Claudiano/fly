@@ -1,7 +1,7 @@
 package settings
 
 import (
-	"fly/models"
+	"fly-go/models"
 	"fmt"
 	"net/http"
 

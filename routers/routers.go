@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"fly/controllers"
+	"fly-go/controllers"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-chi/chi"
 
-	_ "fly/docs"
+	_ "fly-go/docs"
 
 	"github.com/rs/cors"
 	httpSwagger "github.com/swaggo/http-swagger"

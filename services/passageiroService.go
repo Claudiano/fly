@@ -1,9 +1,9 @@
 package services
 
 import (
-	"fly/dtos"
-	"fly/models"
-	"fly/repositories"
+	"fly-go/dtos"
+	"fly-go/models"
+	"fly-go/repositories"
 	"fmt"
 )
 

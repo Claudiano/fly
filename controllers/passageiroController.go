@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
-	"fly/dtos"
-	"fly/models"
-	"fly/services"
-	"fly/settings"
-	"fly/utils"
+	"fly-go/dtos"
+	"fly-go/models"
+	"fly-go/services"
+	"fly-go/settings"
+	"fly-go/utils"
 	"fmt"
 	"log"
 	"net/http"
