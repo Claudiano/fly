@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi"
 
@@ -56,8 +57,12 @@ func InitServer() {
 	// Use default options
 	handler := cors.Default().Handler(r)
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
 	// sob o servido
-	fmt.Println("serviço rodando na porta 8080")
-	log.Fatal(http.ListenAndServe("localhost:8080", handler))
+	fmt.Println("serviço rodando na porta", port)
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 
 }
