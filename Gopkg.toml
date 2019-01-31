@@ -44,7 +44,7 @@
 
  [metadata.heroku]
   root-package = "github.com/claudiano/fly-go"
-  go-version = "go1.11.4"
+  go-version = "go1.11"
   install = ["."]
   ensure = "false"
   additional-tools = ["github.com/golang-migrate/migrate", "github.com/heroku/fixture", 
