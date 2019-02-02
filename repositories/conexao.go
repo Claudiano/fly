@@ -39,10 +39,10 @@ func CriarTabelas() {
 func connectar() *gorm.DB {
 
 	// Abrindo conexão com o banco
-	//db, err := gorm.Open(Drive, "host=localhost port=5432 user=postgres dbname=flydb password=root@123 sslmode=disable")
-	db, err := gorm.Open(Drive, "host="+IpServidor+" port=5432 user="+
-		UserDatabase+" dbname="+DbName+" password="+PasswordDatabase+
-		" sslmode=disable")
+	db, err := gorm.Open(Drive, "host=localhost port=5432 user=postgres dbname=flydb password=root@123 sslmode=disable")
+	//db, err := gorm.Open(Drive, "host="+IpServidor+" port=5432 user="+
+	//	UserDatabase+" dbname="+DbName+" password="+PasswordDatabase+
+	//	" sslmode=disable")
 
 	if err != nil {
 		panic(err)

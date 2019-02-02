@@ -33,6 +33,49 @@ func GenerateJWT(passageiro models.Passageiro) (string, error) {
 	}
 
 	return result, nil
+
+}
+
+func AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := request.ParseFromRequestWithClaims(r, request.OAuth2Extractor, &models.Claim{},
+			func(token *jwt.Token) (interface{}, error) {
+				return SECRET, nil
+			})
+
+		if err != nil {
+			switch err.(type) {
+			case *jwt.ValidationError:
+				vErr := err.(*jwt.ValidationError)
+				switch vErr.Errors {
+				case jwt.ValidationErrorExpired:
+					w.WriteHeader(http.StatusUnauthorized)
+					w.Write([]byte("token expirado"))
+					fmt.Println("token expirado")
+					return
+				case jwt.ValidationErrorSignatureInvalid:
+					w.WriteHeader(http.StatusUnauthorized)
+					w.Write([]byte("Dados invalido, token informado não coincide"))
+					fmt.Println("Dados invalido, token informado não coincide")
+					return
+				default:
+					w.WriteHeader(http.StatusUnauthorized)
+					w.Write([]byte("Token invalido"))
+					fmt.Println("Token invalido")
+					return
+
+				}
+			default:
+				w.WriteHeader(http.StatusUnauthorized)
+				w.Write([]byte("Unauthorized"))
+				fmt.Println("Token informado invalido")
+				return
+
+			}
+		} else {
+			next.ServeHTTP(w, r)
+		}
+	})
 }
 
 // valida se o token passado no header é válido

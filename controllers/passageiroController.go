@@ -33,7 +33,7 @@ func (PassageiroController) BuscarPassageiros(w http.ResponseWriter, r *http.Req
 	passageiros, err := passageiroService.BuscarPassageiros()
 	if err != nil {
 		fmt.Println(err)
-		utils.RespondwithJSON(w, http.StatusAccepted, nil)
+		utils.RespondwithJSON(w, http.StatusNotFound, nil)
 	} else {
 		utils.RespondwithJSON(w, http.StatusBadRequest, passageiros)
 	}
@@ -57,6 +57,8 @@ func (PassageiroController) BuscarPassageiroPorId(w http.ResponseWriter, r *http
 	// convertendo o idpassagem para string
 	idPassageiro, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
+
+		utils.RespondwithJSON(w, http.StatusBadRequest, nil)
 		panic("erros ao ao converter idPassageiro para uint64")
 	}
 
@@ -64,7 +66,7 @@ func (PassageiroController) BuscarPassageiroPorId(w http.ResponseWriter, r *http
 	passageiro, err := passageiroService.BuscarPassageiro(idPassageiro)
 	if err != nil {
 		fmt.Println(err)
-		utils.RespondwithJSON(w, http.StatusBadRequest, nil)
+		utils.RespondwithJSON(w, http.StatusNotFound, nil)
 	} else {
 		utils.RespondwithJSON(w, http.StatusOK, passageiro)
 	}
@@ -87,14 +89,18 @@ func (PassageiroController) CadastrarPassageiro(w http.ResponseWriter, r *http.R
 	var passageiro dtos.PassageiroDto
 
 	// pega o passageiro passado na requisicao
-	json.NewDecoder(r.Body).Decode(&passageiro)
-
-	// serviço que cadastra o passageiro
-	_, err := passageiroService.CadastrarPassageiro(passageiro)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&passageiro)
 	if err != nil {
-		utils.RespondwithJSON(w, http.StatusBadRequest, map[string]string{"message": "Passageiro nao cadastrado"})
+		utils.RespondwithJSON(w, http.StatusBadRequest, map[string]string{"message": "Passageiro não atualizado"})
 	} else {
-		utils.RespondwithJSON(w, http.StatusCreated, map[string]string{"message": "Passageiro cadastrado"})
+		// serviço que cadastra o passageiro
+		_, err := passageiroService.CadastrarPassageiro(passageiro)
+		if err != nil {
+			utils.RespondwithJSON(w, http.StatusNotFound, map[string]string{"message": "Passageiro nao cadastrado"})
+		} else {
+			utils.RespondwithJSON(w, http.StatusCreated, map[string]string{"message": "Passageiro cadastrado"})
+		}
 	}
 
 }
@@ -113,15 +119,18 @@ func (PassageiroController) AtualizarPassageiro(w http.ResponseWriter, r *http.R
 	var passageiro models.Passageiro
 
 	// pega o passageiro passado na requisicao
-	_ = json.NewDecoder(r.Body).Decode(&passageiro)
-
-	// serviço que cadastra o passageiro
-	err := passageiroService.AtualizarPassageiro(passageiro)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&passageiro)
 	if err != nil {
 		utils.RespondwithJSON(w, http.StatusBadRequest, map[string]string{"message": "Passageiro não atualizado"})
 	} else {
-		utils.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Passageiro Atualizado"})
-
+		// serviço que cadastra o passageiro
+		err := passageiroService.AtualizarPassageiro(passageiro)
+		if err != nil {
+			utils.RespondwithJSON(w, http.StatusNotFound, map[string]string{"message": "Passageiro não atualizado"})
+		} else {
+			utils.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Passageiro Atualizado"})
+		}
 	}
 
 }

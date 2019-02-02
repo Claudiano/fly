@@ -16,6 +16,10 @@ var vooService = services.VooService{}
 
 type VooController struct{}
 
+type Ivoo interface {
+	BuscarVoos()
+}
+
 // ShowVoo godoc
 // @Summary Show a voo
 // @Description Retorna todos os voos cadastrados
@@ -29,7 +33,7 @@ func (VooController) BuscarVoos(w http.ResponseWriter, r *http.Request) {
 	var voos []models.Voo
 	voos, err := vooService.CarregarVoos()
 	if err != nil {
-		utils.RespondwithJSON(w, http.StatusAccepted, nil)
+		utils.RespondwithJSON(w, http.StatusNotFound, nil)
 	} else {
 		utils.RespondwithJSON(w, http.StatusAccepted, voos)
 	}
@@ -53,17 +57,19 @@ func (VooController) BuscarVooPorId(w http.ResponseWriter, r *http.Request) {
 	// convertendo o idpassagem para string
 	idVoo, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
-		panic("erros ao ao converter idVoo para uint64")
-	}
-
-	// serviço que retorna o voo com base no idVoo passado
-	voo, err := vooService.CarregarVoo(idVoo)
-
-	// retorno
-	if err != nil {
 		utils.RespondwithJSON(w, http.StatusBadRequest, nil)
+		panic("erros ao ao converter idVoo para uint64")
 	} else {
-		utils.RespondwithJSON(w, http.StatusCreated, voo)
+
+		// serviço que retorna o voo com base no idVoo passado
+		voo, err := vooService.CarregarVoo(idVoo)
+
+		// retorno
+		if err != nil {
+			utils.RespondwithJSON(w, http.StatusNotFound, nil)
+		} else {
+			utils.RespondwithJSON(w, http.StatusCreated, voo)
+		}
 	}
 
 }
@@ -90,7 +96,7 @@ func (VooController) CadastrarVoo(w http.ResponseWriter, r *http.Request) {
 		// serviço que cadastra o voo
 		voo, err := vooService.CadastrarVoo(vooDto)
 		if err != nil {
-			utils.RespondwithJSON(w, http.StatusAccepted, nil)
+			utils.RespondwithJSON(w, http.StatusNotFound, nil)
 		} else {
 			utils.RespondwithJSON(w, http.StatusCreated, voo)
 
@@ -113,7 +119,7 @@ func (VooController) ExcluirVoo(w http.ResponseWriter, r *http.Request) {
 		// serviço que exclui o voo passado
 		err := vooService.ExcluirVoo(voo)
 		if err != nil {
-			utils.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Voo não excluido"})
+			utils.RespondwithJSON(w, http.StatusNotFound, map[string]string{"message": "Voo não excluido"})
 		} else {
 			utils.RespondwithJSON(w, http.StatusOK, map[string]string{"message": "Voo excluido"})
 		}
@@ -144,7 +150,7 @@ func (VooController) AtualizarVoo(w http.ResponseWriter, r *http.Request) {
 		// serviço que exclui o voo passado
 		err := vooService.AtualizarVoo(voo)
 		if err != nil {
-			utils.RespondwithJSON(w, http.StatusAccepted, map[string]string{"message": "Voo não atualizado"})
+			utils.RespondwithJSON(w, http.StatusNotFound, map[string]string{"message": "Voo não atualizado"})
 		} else {
 			utils.RespondwithJSON(w, http.StatusAccepted, map[string]string{"message": "Voo atualizado"})
 
