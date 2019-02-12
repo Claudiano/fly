@@ -20,13 +20,16 @@ type Ivoo interface {
 	BuscarVoos()
 }
 
-// ShowVoo godoc
+// @Title BuscarVoos
 // @Summary Show a voo
 // @Description Retorna todos os voos cadastrados
+// @Tags voo
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} models.Voo
-// @Failure 404 {string} string "ok"
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
 // @Router /voo [get]
 func (VooController) BuscarVoos(w http.ResponseWriter, r *http.Request) {
 
@@ -43,11 +46,14 @@ func (VooController) BuscarVoos(w http.ResponseWriter, r *http.Request) {
 // ShowVoo godoc
 // @Summary Show a voo
 // @Description Retorna o voo cadastrado com base no idVoo passado
+// @Tags voo
 // @Accept  json
 // @Produce  json
 // @Param idVoo path int true "IdVoo"
 // @Success 200 {object} models.Voo
-// @Failure 404 {string} string "ok"
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
 // @Router /voo/{idVoo} [get]
 func (VooController) BuscarVooPorId(w http.ResponseWriter, r *http.Request) {
 	//
@@ -77,11 +83,14 @@ func (VooController) BuscarVooPorId(w http.ResponseWriter, r *http.Request) {
 // ShowVoo godoc
 // @Summary Show a voo
 // @Description Metodo que cadastrar voos
+// @Tags voo
 // @Accept  json
 // @Produce  json
 // @Param idVoo path int true "IdVoo"
-// @Success 200
-// @Failure 404 {string} string "ok"
+// @Success 200 {object} models.Voo
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
 // @Router /voo [post]
 func (VooController) CadastrarVoo(w http.ResponseWriter, r *http.Request) {
 	var vooDto dtos.VooDto
@@ -104,6 +113,21 @@ func (VooController) CadastrarVoo(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ShowVoo godoc
+// @Summary Show a voo
+// @Description Metodo que cadastrar voos
+// @Tags voo
+// @Accept  json
+// @Produce  json
+// @Param idVoo path int true "IdVoo"
+// @Param destino path string true "IdVoo"
+// @Param horaSaida path string true "IdVoo"
+// @Param capacidade path int true "IdVoo"
+// @Success 200 {object} models.Voo
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
+// @Router /voo [delete]
 func (VooController) ExcluirVoo(w http.ResponseWriter, r *http.Request) {
 
 	// voo que será adicionado
@@ -129,11 +153,14 @@ func (VooController) ExcluirVoo(w http.ResponseWriter, r *http.Request) {
 // ShowVoo godoc
 // @Summary Show a voo
 // @Description Metodo para atualizar um voo
+// @Tags voo
 // @Accept  json
 // @Produce  json
-
 // @Success 200
-// @Failure 404 {string} string "ok"
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
+// @Resource /voo
 // @Router /voo [put]
 func (VooController) AtualizarVoo(w http.ResponseWriter, r *http.Request) {
 

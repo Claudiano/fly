@@ -1,5 +1,23 @@
 basePath: /api/v1
 definitions:
+  dtos.CredenciaisDto:
+    properties:
+      email:
+        type: string
+      senha:
+        type: string
+    type: object
+  dtos.PassageiroDto:
+    properties:
+      cpf:
+        type: string
+      email:
+        type: string
+      nome:
+        type: string
+      senha:
+        type: string
+    type: object
   models.Passageiro:
     properties:
       cpf:
@@ -13,6 +31,24 @@ definitions:
       senha:
         type: string
     type: object
+  models.Passagem:
+    properties:
+      dataCompra:
+        type: string
+      idPassageiro:
+        type: integer
+      idPassagem:
+        type: integer
+      idVoo:
+        type: integer
+      numeroAcento:
+        type: integer
+    type: object
+  models.ResponseToken:
+    properties:
+      token:
+        type: string
+    type: object
   models.Voo:
     properties:
       capacidade:
@@ -24,7 +60,7 @@ definitions:
       idVoo:
         type: integer
     type: object
-host: localhost
+host: '{{.Host}}'
 info:
   contact:
     email: support@swagger.io
@@ -40,12 +76,37 @@ info:
 paths:
   /login:
     post:
+      consumes:
+      - application/json
+      description: verifica na base se existe as credenciais passadas, e retorna um
+        token caso exista.
+      parameters:
+      - description: Login
+        in: body
+        name: Passageiro
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CredenciaisDto'
+          type: object
+      produces:
+      - application/json
       responses:
-        "200": {}
-        "404":
-          description: ok
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseToken'
+            type: object
+        "400":
+          description: Requisição invalida
           schema:
             type: string
+        "404":
+          description: Nenhum registro encontrado.
+          schema:
+            type: string
+      summary: realizar login
+      tags:
+      - Auth
   /passageiro:
     get:
       consumes:
@@ -57,39 +118,92 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Passageiro'
-            type: object
+            items:
+              $ref: '#/definitions/models.Passageiro'
+            type: array
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
         "404":
-          description: ok
+          description: Nenhum registro encontrado.
           schema:
             type: string
       summary: Show a passageiro
+      tags:
+      - Passageiro
     post:
       consumes:
       - application/json
       description: Metodo que cadastrar passageiro
       parameters:
-      - description: IdPassageiro
-        in: path
-        name: idPassageiro
+      - description: Passageiro
+        in: body
+        name: Passageiro
         required: true
-        type: integer
+        schema:
+          $ref: '#/definitions/dtos.PassageiroDto'
+          type: object
       produces:
       - application/json
       responses:
-        "200": {}
+        "200":
+          description: Passageiro cadastrado
+          schema:
+            type: string
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
         "404":
-          description: ok
+          description: Nenhum registro encontrado.
           schema:
             type: string
       summary: Show a passageiro
+      tags:
+      - Passageiro
     put:
+      consumes:
+      - application/json
+      description: Metodo para atualizar um voo
+      parameters:
+      - description: Passageiro
+        in: body
+        name: Passageiro
+        required: true
+        schema:
+          $ref: '#/definitions/models.Passageiro'
+          type: object
+      produces:
+      - application/json
       responses:
-        "200": {}
-        "404":
-          description: ok
+        "200":
+          description: Passageiro atualizado
           schema:
             type: string
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
+        "404":
+          description: Nenhum registro encontrado.
+          schema:
+            type: string
+      summary: Show a voo
+      tags:
+      - Passageiro
   /passageiro/{idPassageiro}:
     get:
       consumes:
@@ -109,12 +223,180 @@ paths:
           schema:
             $ref: '#/definitions/models.Passageiro'
             type: object
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
         "404":
-          description: ok
+          description: Nenhum registro encontrado.
           schema:
             type: string
       summary: Show a passageiro
+      tags:
+      - Passageiro
+  /passagem:
+    delete:
+      consumes:
+      - application/json
+      description: Metodo para excluir uma pasagem
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Passagem'
+            type: object
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
+        "404":
+          description: Nenhum registro encontrado.
+          schema:
+            type: string
+      summary: Show a passagens
+      tags:
+      - Passagem
+    get:
+      consumes:
+      - application/json
+      description: Metodo para buscar passagem passando o id da passagem como referencia
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Passagem'
+            type: array
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
+        "404":
+          description: Nenhum registro encontrado.
+          schema:
+            type: string
+      summary: Show a passagens
+      tags:
+      - Passagem
+    post:
+      consumes:
+      - application/json
+      description: Metodo para registrar uma pasagem
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Passagem'
+            type: object
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
+        "404":
+          description: Nenhum registro encontrado.
+          schema:
+            type: string
+      summary: Show a passagens
+      tags:
+      - Passagem
+    put:
+      consumes:
+      - application/json
+      description: Metodo atualiza uma passagem
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Passagem'
+            type: object
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
+        "404":
+          description: Nenhum registro encontrado.
+          schema:
+            type: string
+      summary: Show a passagens
+      tags:
+      - Passagem
   /voo:
+    delete:
+      consumes:
+      - application/json
+      description: Metodo que cadastrar voos
+      parameters:
+      - description: IdVoo
+        in: path
+        name: idVoo
+        required: true
+        type: integer
+      - description: IdVoo
+        in: path
+        name: destino
+        required: true
+        type: string
+      - description: IdVoo
+        in: path
+        name: horaSaida
+        required: true
+        type: string
+      - description: IdVoo
+        in: path
+        name: capacidade
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Voo'
+            type: object
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
+        "404":
+          description: Nenhum registro encontrado.
+          schema:
+            type: string
+      summary: Show a voo
+      tags:
+      - voo
     get:
       consumes:
       - application/json
@@ -127,11 +409,21 @@ paths:
           schema:
             $ref: '#/definitions/models.Voo'
             type: object
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
         "404":
-          description: ok
+          description: Nenhum registro encontrado.
           schema:
             type: string
       summary: Show a voo
+      tags:
+      - voo
     post:
       consumes:
       - application/json
@@ -145,19 +437,49 @@ paths:
       produces:
       - application/json
       responses:
-        "200": {}
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Voo'
+            type: object
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
         "404":
-          description: ok
+          description: Nenhum registro encontrado.
           schema:
             type: string
       summary: Show a voo
+      tags:
+      - voo
     put:
+      consumes:
+      - application/json
+      description: Metodo para atualizar um voo
+      produces:
+      - application/json
       responses:
         "200": {}
-        "404":
-          description: ok
+        "400":
+          description: Requisição invalida
           schema:
             type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
+        "404":
+          description: Nenhum registro encontrado.
+          schema:
+            type: string
+      summary: Show a voo
+      tags:
+      - voo
   /voo/{idVoo}:
     get:
       consumes:
@@ -177,11 +499,21 @@ paths:
           schema:
             $ref: '#/definitions/models.Voo'
             type: object
+        "400":
+          description: Requisição invalida
+          schema:
+            type: string
+        "401":
+          description: Não autorizado
+          schema:
+            type: string
         "404":
-          description: ok
+          description: Nenhum registro encontrado.
           schema:
             type: string
       summary: Show a voo
+      tags:
+      - voo
 securityDefinitions:
   BasicAuth:
     type: basic

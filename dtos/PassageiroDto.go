@@ -1,8 +1,8 @@
 package dtos
 
 type PassageiroDto struct {
-	Nome  string
-	Cpf   string
-	Email string
-	Senha string
+	Nome  string `json: Nome`
+	Cpf   string `json: CPF`
+	Email string `json: Email`
+	Senha string `json: Senha`
 }

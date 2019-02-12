@@ -2,7 +2,6 @@ package routers
 
 import (
 	"fly-go/controllers"
-	"fly-go/settings"
 	"fmt"
 	"log"
 	"net/http"
@@ -26,16 +25,16 @@ func InitServer() {
 	var passageiroController = controllers.PassageiroController{}
 
 	// Verifica serviços necessarias para funcionar
-
 	r := chi.NewRouter()
 
 	routesAuth := r.Group(nil)
-	routesAuth.Use(settings.AuthMiddleware)
+	//routesAuth.Use(settings.AuthMiddleware)
 
 	// realizar login
 	r.Post(PATH_RAIZ+"/login", passageiroController.RealizarLogin)
 
 	// endpoints de voo
+
 	routesAuth.Get(PATH_RAIZ+"/voo", vooController.BuscarVoos)
 	routesAuth.Post(PATH_RAIZ+"/voo", vooController.CadastrarVoo)
 	routesAuth.Delete(PATH_RAIZ+"/voo", vooController.ExcluirVoo)
@@ -59,7 +58,16 @@ func InitServer() {
 	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 	// Use default options
-	handler := cors.Default().Handler(r)
+	handler := cors.New(cors.Options{
+		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
+		AllowedOrigins: []string{"*"},
+		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"X-My-Custom-Header", "X-Another-Custom-Header"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}).Handler(r)
 
 	port := os.Getenv("PORT")
 	if port == "" {

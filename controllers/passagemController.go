@@ -16,19 +16,44 @@ var passagemService = services.PassagemService{}
 
 type PassagemController struct{}
 
+// ShowVoo godoc
+// @Summary Show a passagens
+// @Description Metodo para buscar todas as passagens
+// @Tags Passagem
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} models.Passagem
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
+// @Router /passagem [get]
 func (PassagemController) BuscarPassagens(w http.ResponseWriter, r *http.Request) {
 
 	var passagens []models.Passagem
 	passagens, err := passagemService.CarregarPassagens()
 	if err != nil {
-		utils.RespondwithJSON(w, http.StatusNonAuthoritativeInfo, nil)
+		utils.RespondwithJSON(w, http.StatusNotFound, []models.Passagem{})
 	} else {
-
-		utils.RespondwithJSON(w, http.StatusOK, passagens)
+		if len(passagens) == 0 {
+			utils.RespondwithJSON(w, http.StatusNotFound, []models.Passagem{})
+		} else {
+			utils.RespondwithJSON(w, http.StatusOK, passagens)
+		}
 	}
 
 }
 
+// ShowVoo godoc
+// @Summary Show a passagens
+// @Description Metodo para buscar passagem passando o id da passagem como referencia
+// @Tags Passagem
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} models.Passagem
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
+// @Router /passagem [get]
 func (PassagemController) BuscarPassagemPorId(w http.ResponseWriter, r *http.Request) {
 	// pega parametros passados
 	id := chi.URLParam(r, "idPassagem")
@@ -36,7 +61,7 @@ func (PassagemController) BuscarPassagemPorId(w http.ResponseWriter, r *http.Req
 	// convertendo o idpassagem para string
 	idPassagem, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
-		panic("erros ao ao converter idPassagem para uint64")
+		utils.RespondwithJSON(w, http.StatusBadRequest, nil)
 	}
 	// serviço que retorna o passagem com base no idPassagem passado
 	passagem, err := passagemService.CarregarPassagem(idPassagem)
@@ -48,6 +73,18 @@ func (PassagemController) BuscarPassagemPorId(w http.ResponseWriter, r *http.Req
 	}
 
 }
+
+// ShowVoo godoc
+// @Summary Show a passagens
+// @Description Metodo para registrar uma pasagem
+// @Tags Passagem
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} models.Passagem
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
+// @Router /passagem [post]
 func (PassagemController) CadastrarPassagem(w http.ResponseWriter, r *http.Request) {
 	var passagemDto dtos.PassagemDto
 
@@ -61,7 +98,7 @@ func (PassagemController) CadastrarPassagem(w http.ResponseWriter, r *http.Reque
 		// serviço que cadastra o passagem
 		passagem, err := passagemService.CadastrarPassagem(passagemDto)
 		if err != nil {
-			utils.RespondwithJSON(w, http.StatusAccepted, nil)
+			utils.RespondwithJSON(w, http.StatusNotImplemented, models.Passagem{})
 		} else {
 			utils.RespondwithJSON(w, http.StatusCreated, passagem)
 		}
@@ -69,6 +106,17 @@ func (PassagemController) CadastrarPassagem(w http.ResponseWriter, r *http.Reque
 	}
 }
 
+// ShowVoo godoc
+// @Summary Show a passagens
+// @Description Metodo para excluir uma pasagem
+// @Tags Passagem
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} models.Passagem
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
+// @Router /passagem [delete]
 func (PassagemController) ExcluirPassagem(w http.ResponseWriter, r *http.Request) {
 
 	// passagem que será adicionado
@@ -85,7 +133,7 @@ func (PassagemController) ExcluirPassagem(w http.ResponseWriter, r *http.Request
 		res, err := passagemService.ExcluirPassagem(passagem)
 
 		if err != nil {
-			utils.RespondwithJSON(w, http.StatusAccepted, nil)
+			utils.RespondwithJSON(w, http.StatusNotFound, map[string]string{"messaege": "Não foi possivel salvar excluir a passagem."})
 		} else {
 			utils.RespondwithJSON(w, http.StatusOK, res)
 		}
@@ -93,6 +141,17 @@ func (PassagemController) ExcluirPassagem(w http.ResponseWriter, r *http.Request
 
 }
 
+// ShowVoo godoc
+// @Summary Show a passagens
+// @Description Metodo atualiza uma passagem
+// @Tags Passagem
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} models.Passagem
+// @Failure 400 {string} string "Requisição invalida"
+// @Failure 401 {string} string "Não autorizado"
+// @Failure 404 {string} string "Nenhum registro encontrado."
+// @Router /passagem [put]
 func (PassagemController) AtualizarPassagem(w http.ResponseWriter, r *http.Request) {
 	// passagem que será adicionado
 	var passagem models.Passagem
@@ -106,7 +165,7 @@ func (PassagemController) AtualizarPassagem(w http.ResponseWriter, r *http.Reque
 		// serviço que exclui o passagem passado
 		res, err := passagemService.AtualizarPassagem(passagem)
 		if err != nil {
-			utils.RespondwithJSON(w, http.StatusAccepted, nil)
+			utils.RespondwithJSON(w, http.StatusNotFound, passagem)
 		} else {
 			utils.RespondwithJSON(w, http.StatusOK, res)
 		}

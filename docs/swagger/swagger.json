@@ -15,15 +15,50 @@
         },
         "version": "1.0"
     },
-    "host": "localhost",
+    "host": "{{.Host}}",
     "basePath": "/api/v1",
     "paths": {
         "/login": {
             "post": {
+                "description": "verifica na base se existe as credenciais passadas, e retorna um token caso exista.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "realizar login",
+                "parameters": [
+                    {
+                        "description": "Login",
+                        "name": "Passageiro",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/dtos.CredenciaisDto"
+                        }
+                    }
+                ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.ResponseToken"
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
-                        "description": "ok",
+                        "description": "Nenhum registro encontrado.",
                         "schema": {
                             "type": "string"
                         }
@@ -40,17 +75,34 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Passageiro"
+                ],
                 "summary": "Show a passageiro",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "$ref": "#/definitions/models.Passageiro"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Passageiro"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "404": {
-                        "description": "ok",
+                        "description": "Nenhum registro encontrado.",
                         "schema": {
                             "type": "string"
                         }
@@ -58,10 +110,50 @@
                 }
             },
             "put": {
+                "description": "Metodo para atualizar um voo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Passageiro"
+                ],
+                "summary": "Show a voo",
+                "parameters": [
+                    {
+                        "description": "Passageiro",
+                        "name": "Passageiro",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Passageiro"
+                        }
+                    }
+                ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": "Passageiro atualizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
-                        "description": "ok",
+                        "description": "Nenhum registro encontrado.",
                         "schema": {
                             "type": "string"
                         }
@@ -76,20 +168,43 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Passageiro"
+                ],
                 "summary": "Show a passageiro",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "IdPassageiro",
-                        "name": "idPassageiro",
-                        "in": "path",
-                        "required": true
+                        "description": "Passageiro",
+                        "name": "Passageiro",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/dtos.PassageiroDto"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": "Passageiro cadastrado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
-                        "description": "ok",
+                        "description": "Nenhum registro encontrado.",
                         "schema": {
                             "type": "string"
                         }
@@ -106,6 +221,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Passageiro"
+                ],
                 "summary": "Show a passageiro",
                 "parameters": [
                     {
@@ -124,8 +242,184 @@
                             "$ref": "#/definitions/models.Passageiro"
                         }
                     },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
-                        "description": "ok",
+                        "description": "Nenhum registro encontrado.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/passagem": {
+            "get": {
+                "description": "Metodo para buscar passagem passando o id da passagem como referencia",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Passagem"
+                ],
+                "summary": "Show a passagens",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Passagem"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhum registro encontrado.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Metodo atualiza uma passagem",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Passagem"
+                ],
+                "summary": "Show a passagens",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Passagem"
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhum registro encontrado.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Metodo para registrar uma pasagem",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Passagem"
+                ],
+                "summary": "Show a passagens",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Passagem"
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhum registro encontrado.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Metodo para excluir uma pasagem",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Passagem"
+                ],
+                "summary": "Show a passagens",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Passagem"
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhum registro encontrado.",
                         "schema": {
                             "type": "string"
                         }
@@ -142,6 +436,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "voo"
+                ],
                 "summary": "Show a voo",
                 "responses": {
                     "200": {
@@ -151,8 +448,20 @@
                             "$ref": "#/definitions/models.Voo"
                         }
                     },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
-                        "description": "ok",
+                        "description": "Nenhum registro encontrado.",
                         "schema": {
                             "type": "string"
                         }
@@ -160,10 +469,33 @@
                 }
             },
             "put": {
+                "description": "Metodo para atualizar um voo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "voo"
+                ],
+                "summary": "Show a voo",
                 "responses": {
                     "200": {},
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
-                        "description": "ok",
+                        "description": "Nenhum registro encontrado.",
                         "schema": {
                             "type": "string"
                         }
@@ -178,6 +510,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "voo"
+                ],
                 "summary": "Show a voo",
                 "parameters": [
                     {
@@ -189,9 +524,97 @@
                     }
                 ],
                 "responses": {
-                    "200": {},
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Voo"
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
-                        "description": "ok",
+                        "description": "Nenhum registro encontrado.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Metodo que cadastrar voos",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "voo"
+                ],
+                "summary": "Show a voo",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "IdVoo",
+                        "name": "idVoo",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IdVoo",
+                        "name": "destino",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IdVoo",
+                        "name": "horaSaida",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "IdVoo",
+                        "name": "capacidade",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Voo"
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhum registro encontrado.",
                         "schema": {
                             "type": "string"
                         }
@@ -208,6 +631,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "voo"
+                ],
                 "summary": "Show a voo",
                 "parameters": [
                     {
@@ -226,8 +652,20 @@
                             "$ref": "#/definitions/models.Voo"
                         }
                     },
+                    "400": {
+                        "description": "Requisição invalida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "404": {
-                        "description": "ok",
+                        "description": "Nenhum registro encontrado.",
                         "schema": {
                             "type": "string"
                         }
@@ -237,6 +675,34 @@
         }
     },
     "definitions": {
+        "dtos.CredenciaisDto": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "senha": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.PassageiroDto": {
+            "type": "object",
+            "properties": {
+                "cpf": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "senha": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Passageiro": {
             "type": "object",
             "properties": {
@@ -253,6 +719,34 @@
                     "type": "string"
                 },
                 "senha": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Passagem": {
+            "type": "object",
+            "properties": {
+                "dataCompra": {
+                    "type": "string"
+                },
+                "idPassageiro": {
+                    "type": "integer"
+                },
+                "idPassagem": {
+                    "type": "integer"
+                },
+                "idVoo": {
+                    "type": "integer"
+                },
+                "numeroAcento": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ResponseToken": {
+            "type": "object",
+            "properties": {
+                "token": {
                     "type": "string"
                 }
             }
